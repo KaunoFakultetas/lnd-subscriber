@@ -58,64 +58,73 @@ def connect_to_db():
 
 def create_tables(cursor):
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS channel_updates (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        chan_id BIGINT,
-        chan_point TEXT,
-        capacity BIGINT,
-        time_lock_delta INT,
-        min_htlc BIGINT,
-        fee_base_msat BIGINT,
-        fee_rate_milli_msat BIGINT,
-        max_htlc_msat BIGINT,
-        disabled BOOLEAN,
-        advertising_node VARCHAR(66),
-        connecting_node VARCHAR(66)
+    CREATE TABLE `channel_updates` ( 
+        `id` INT AUTO_INCREMENT NOT NULL,
+        `chan_id` BIGINT NOT NULL,
+        `chan_point` VARCHAR(255) NOT NULL,
+        `capacity` BIGINT NOT NULL,
+        `time_lock_delta` INT NULL,
+        `min_htlc` BIGINT NULL,
+        `fee_base_msat` BIGINT NULL,
+        `fee_rate_milli_msat` BIGINT NULL,
+        `max_htlc_msat` BIGINT NULL,
+        `disabled` TINYINT NULL,
+        `advertising_node` VARCHAR(255) NULL,
+        `connecting_node` VARCHAR(255) NULL,
+        `timestamp` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ,
+        CONSTRAINT `PRIMARY` PRIMARY KEY (`id`)
     );
     """)
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS node_updates (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        identity_key VARCHAR(66),
-        alias VARCHAR(32),
-        color VARCHAR(7),
-        features TEXT,
-        addresses TEXT
+    CREATE TABLE `node_updates` (
+        `id` INT AUTO_INCREMENT NOT NULL,
+        `identity_key` VARCHAR(255) NOT NULL,
+        `alias` VARCHAR(255) NULL,
+        `color` VARCHAR(7) NULL,
+        `features` TEXT NULL,
+        `addresses` TEXT NULL,
+        `timestamp` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ,
+        CONSTRAINT `PRIMARY` PRIMARY KEY (`id`)
     );
     """)
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS channel_edge_updates (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        chan_id BIGINT,
-        chan_point TEXT,
-        capacity BIGINT,
-        routing_policy_1 TEXT,
-        routing_policy_2 TEXT,
-        advertising_node VARCHAR(66),
-        connecting_node VARCHAR(66)
+    CREATE TABLE `channel_edge_updates` ( 
+        `id` INT AUTO_INCREMENT NOT NULL,
+        `chan_id` BIGINT NOT NULL,
+        `chan_point` VARCHAR(255) NOT NULL,
+        `capacity` BIGINT NOT NULL,
+        `routing_policy_1` TEXT NULL,
+        `routing_policy_2` TEXT NULL,
+        `advertising_node` VARCHAR(255) NULL,
+        `connecting_node` VARCHAR(255) NULL,
+        `timestamp` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ,
+        CONSTRAINT `PRIMARY` PRIMARY KEY (`id`)
     );
     """)
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS closed_channels (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        chan_id BIGINT,
-        chan_point TEXT,
-        capacity BIGINT,
-        closed_height INT
+    CREATE TABLE `closed_channels` ( 
+        `id` INT AUTO_INCREMENT NOT NULL,
+        `chan_id` BIGINT NOT NULL,
+        `chan_point` VARCHAR(255) NOT NULL,
+        `capacity` BIGINT NOT NULL,
+        `closed_height` INT NULL,
+        `timestamp` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ,
+        CONSTRAINT `PRIMARY` PRIMARY KEY (`id`)
     );
     """)
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS channel_announcements (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        chan_id BIGINT,
-        node1_pub VARCHAR(66),
-        node2_pub VARCHAR(66),
-        bitcoin_txid VARCHAR(64),
-        output_index INT,
-        node1_signature TEXT,
-        node2_signature TEXT,
-        timestamp BIGINT
-    )
+    CREATE TABLE `channel_announcements` ( 
+        `id` INT AUTO_INCREMENT NOT NULL,
+        `chan_id` BIGINT NULL,
+        `node1_pub` VARCHAR(66) NULL,
+        `node2_pub` VARCHAR(66) NULL,
+        `bitcoin_txid` VARCHAR(64) NULL,
+        `output_index` INT NULL,
+        `node1_signature` TEXT NULL,
+        `node2_signature` TEXT NULL,
+        `timestamp` BIGINT NULL,
+        CONSTRAINT `PRIMARY` PRIMARY KEY (`id`)
+    );
     """)
 
 
