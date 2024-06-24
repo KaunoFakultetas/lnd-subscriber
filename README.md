@@ -10,7 +10,6 @@ This repository contains the deployment files of LND node and subscriber contain
 
 Before starting this project you need to install into your system:
 - Docker and Docker Compose
-- Nvidia Drivers
 
 ### 1.1. Docker and Docker Compose:
 ```sh
