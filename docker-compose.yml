@@ -62,6 +62,22 @@ services:
 
 
 
+  # Stack restarter 2 hours
+  lnd-subscriber-stack-restarter:
+    container_name: lnd-subscriber-stack-restarter
+    image: lnd-subscriber-stack-restarter
+    build: ./stack-restarter
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - CRON_SCHEDULE=0 */2 * * *
+    networks: []
+    restart: unless-stopped
+
+
+
+
   # Database browser to view the results
   lnd-subscriber-dbgate:
     container_name: lnd-subscriber-dbgate
