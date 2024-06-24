@@ -4,7 +4,7 @@ services:
   # LND service
   lnd-subscriber-lnd:
     container_name: lnd-subscriber-lnd
-    image: btcpayserver/lnd:v0.18.0-beta
+    image: lightninglabs/lnd:v0.18.0-beta
     environment:
       - RPCUSER=root
       - RPCPASS=root
