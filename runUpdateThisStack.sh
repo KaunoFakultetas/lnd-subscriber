@@ -2,7 +2,6 @@
 
 mkdir -p lnd
 mkdir -p ./lnd/lnd
-mkdir -p ./lnd/shared
 mkdir -p mysql
 
 touch ./subscriber/updates.log
