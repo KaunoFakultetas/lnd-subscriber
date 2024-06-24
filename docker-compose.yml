@@ -1,0 +1,90 @@
+services:
+
+
+  # LND service
+  lnd-subscriber-lnd:
+    container_name: lnd-subscriber-lnd
+    image: btcpayserver/lnd:v0.18.0-beta
+    environment:
+      - RPCUSER=root
+      - RPCPASS=root
+      - BACKEND=neutrino
+      - NETWORK=mainnet
+      - NEUTRINO_CONNECT=89.117.58.113,75.31.96.61,84.113.129.195,91.134.145.202 # https://bitnodes.io/nodes/?page=1&q=COMPACT
+      - FEE_URL=https://mempool.space/api/v1/fees/recommended
+      - LNDHOST=lnd-subscriber-lnd
+    volumes:
+      - ./lnd/lnd:/root/.lnd
+      - ./lnd/start-lnd.sh:/start-lnd.sh:ro
+    depends_on:
+      - lnd-subscriber-subscriber
+    entrypoint: ["/start-lnd.sh"]
+
+
+
+  # Python container that subscribes to LND service gossip messages
+  lnd-subscriber-subscriber:
+    container_name: lnd-subscriber-subscriber
+    image: lnd-subscriber-subscriber
+    build: ./subscriber
+    volumes:
+      - ./lnd/lnd:/root/.lnd:ro
+      - ./subscriber/updates.log:/usr/src/app/updates.log
+    environment:
+      - LND_HOST=lnd-subscriber-lnd
+      - DB_HOST=lnd-subscriber-mysql
+      - DB_USER=lnd_data
+      - DB_PASS=lnd_data
+    depends_on:
+      - lnd-subscriber-mysql
+    restart: unless-stopped
+
+
+
+
+  # Database to store the gossip messages
+  lnd-subscriber-mysql:
+    container_name: lnd-subscriber-mysql
+    image: mysql:8.4.0
+    user: 1000:1000
+    read_only: true
+    tmpfs:
+      - /run/mysqld:uid=999,gid=999
+      - /tmp
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: lnd_data
+      MYSQL_USER: lnd_data
+      MYSQL_PASSWORD: lnd_data
+    volumes:
+      - ./mysql:/var/lib/mysql
+    restart: unless-stopped
+
+
+
+  # Database browser to view the results
+  lnd-subscriber-dbgate:
+    container_name: lnd-subscriber-dbgate
+    image: dbgate/dbgate:5.2.9-alpine
+    read_only: false
+    environment:
+      WEB_ROOT: /
+
+      LOGINS: admin
+      LOGIN_PASSWORD_admin: admin
+
+      CONNECTIONS: con4
+      LABEL_con4: LND Subscriber DB
+      SERVER_con4: lnd-subscriber-mysql
+      USER_con4: lnd_data
+      PASSWORD_con4: lnd_data
+      PORT_con4: 3306
+      ENGINE_con4: mysql@dbgate-plugin-mysql
+
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "8091:3000"
+    restart: unless-stopped
+
+
