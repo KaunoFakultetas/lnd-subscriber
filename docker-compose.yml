@@ -60,6 +60,7 @@ services:
       MYSQL_USER: lnd_data
       MYSQL_PASSWORD: lnd_data
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - ./mysql:/var/lib/mysql
     restart: unless-stopped
 
