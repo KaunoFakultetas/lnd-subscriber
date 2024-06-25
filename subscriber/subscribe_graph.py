@@ -58,7 +58,7 @@ def connect_to_db():
 
 def create_tables(cursor):
     cursor.execute("""
-    CREATE TABLE `channel_updates` ( 
+    CREATE TABLE IF NOT EXISTS `channel_updates` ( 
         `id` INT AUTO_INCREMENT NOT NULL,
         `chan_id` BIGINT NOT NULL,
         `chan_point` VARCHAR(255) NOT NULL,
@@ -76,7 +76,7 @@ def create_tables(cursor):
     );
     """)
     cursor.execute("""
-    CREATE TABLE `node_updates` (
+    CREATE TABLE IF NOT EXISTS `node_updates` (
         `id` INT AUTO_INCREMENT NOT NULL,
         `identity_key` VARCHAR(255) NOT NULL,
         `alias` VARCHAR(255) NULL,
@@ -88,7 +88,7 @@ def create_tables(cursor):
     );
     """)
     cursor.execute("""
-    CREATE TABLE `channel_edge_updates` ( 
+    CREATE TABLE IF NOT EXISTS `channel_edge_updates` ( 
         `id` INT AUTO_INCREMENT NOT NULL,
         `chan_id` BIGINT NOT NULL,
         `chan_point` VARCHAR(255) NOT NULL,
@@ -102,7 +102,7 @@ def create_tables(cursor):
     );
     """)
     cursor.execute("""
-    CREATE TABLE `closed_channels` ( 
+    CREATE TABLE IF NOT EXISTS `closed_channels` ( 
         `id` INT AUTO_INCREMENT NOT NULL,
         `chan_id` BIGINT NOT NULL,
         `chan_point` VARCHAR(255) NOT NULL,
@@ -113,7 +113,7 @@ def create_tables(cursor):
     );
     """)
     cursor.execute("""
-    CREATE TABLE `channel_announcements` ( 
+    CREATE TABLE IF NOT EXISTS `channel_announcements` ( 
         `id` INT AUTO_INCREMENT NOT NULL,
         `chan_id` BIGINT NULL,
         `node1_pub` VARCHAR(66) NULL,
