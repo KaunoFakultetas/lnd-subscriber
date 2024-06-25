@@ -37,6 +37,14 @@ cd lnd-subscriber
 
 <br>
 
+## Other
+
+### **Manually check if LND has connected to peers**: 
+```sh
+sudo docker exec lnd-subscriber-lnd lncli --rpcserver=localhost:10009 --macaroonpath=/root/.lnd/data/chain/bitcoin/mainnet/admin.macaroon listpeers
+```
+<br>
+
 ## Contributing
 
 Feel free to submit issues and pull requests.
