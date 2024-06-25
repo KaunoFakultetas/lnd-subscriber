@@ -43,6 +43,12 @@ cd lnd-subscriber
 ```sh
 sudo docker exec lnd-subscriber-lnd lncli --rpcserver=localhost:10009 --macaroonpath=/root/.lnd/data/chain/bitcoin/mainnet/admin.macaroon listpeers
 ```
+
+### **Manually check latest timestamp of channel_update record**: 
+```sh
+sudo docker exec lnd-subscriber-mysql mysql -u lnd_data -plnd_data lnd_data -ss -e "SELECT MAX(timestamp) FROM channel_updates;" 2>/dev/null
+```
+
 <br>
 
 ## Contributing
