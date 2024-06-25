@@ -16,9 +16,14 @@ services:
     volumes:
       - ./lnd/lnd:/root/.lnd
       - ./lnd/start-lnd.sh:/start-lnd.sh:ro
-    depends_on:
-      - lnd-subscriber-subscriber
     entrypoint: ["/start-lnd.sh"]
+    healthcheck:
+      test: ["CMD", "lncli", "--rpcserver=localhost:10009", "--macaroonpath=/root/.lnd/data/chain/bitcoin/mainnet/admin.macaroon", "listpeers", "|", "grep", "-q", '"pub_key"']
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
 
 
 
@@ -35,8 +40,6 @@ services:
       - DB_HOST=lnd-subscriber-mysql
       - DB_USER=lnd_data
       - DB_PASS=lnd_data
-    depends_on:
-      - lnd-subscriber-mysql
     restart: unless-stopped
 
 
@@ -61,10 +64,12 @@ services:
     restart: unless-stopped
 
 
+
+
   # Database browser to view the results
   lnd-subscriber-dbgate:
     container_name: lnd-subscriber-dbgate
-    image: dbgate/dbgate:5.2.9-alpine
+    image: dbgate/dbgate:5.3.1-alpine
     read_only: false
     environment:
       WEB_ROOT: /
@@ -84,19 +89,4 @@ services:
       - /etc/localtime:/etc/localtime:ro
     ports:
       - "8091:3000"
-    restart: unless-stopped
-
-
-
-  # Stack restarter 2 hours
-  lnd-subscriber-stack-restarter:
-    container_name: lnd-subscriber-stack-restarter
-    image: lnd-subscriber-stack-restarter
-    build: ./stack-restarter
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - CRON_SCHEDULE=* * * * *
-    networks: []
     restart: unless-stopped
