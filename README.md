@@ -41,7 +41,7 @@ cd lnd-subscriber
 
 ### **Manually check if LND has connected to peers**: 
 ```sh
-sudo docker exec lnd-subscriber-lnd lncli --rpcserver=localhost:10009 --macaroonpath=/root/.lnd/data/chain/bitcoin/mainnet/admin.macaroon listpeers
+sudo docker exec lnd-subscriber-lnd lncli --rpcserver=localhost:10009 --macaroonpath=/root/.lnd/data/chain/bitcoin/mainnet/admin.macaroon listpeers | grep address
 ```
 
 ### **Manually check latest timestamp of channel_update record**: 
